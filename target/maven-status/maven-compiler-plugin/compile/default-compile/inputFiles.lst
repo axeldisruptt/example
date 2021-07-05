@@ -1,4 +1,7 @@
-/home/ger/Proyectos/camel/my-camel-app/src/main/java/com/example/MySpringBean.java
-/home/ger/Proyectos/camel/my-camel-app/src/main/java/com/example/BeanDatos.java
-/home/ger/Proyectos/camel/my-camel-app/src/main/java/com/example/MySpringBootApplication.java
-/home/ger/Proyectos/camel/my-camel-app/src/main/java/com/example/MySpringBootRouter.java
+/Users/axel/codeready-workspace/camel/src/main/java/com/example/OAuthSign.java
+/Users/axel/codeready-workspace/camel/src/main/java/com/example/BodyBeans.java
+/Users/axel/codeready-workspace/camel/src/main/java/com/example/MySpringBean.java
+/Users/axel/codeready-workspace/camel/src/main/java/com/example/MySpringBootApplication.java
+/Users/axel/codeready-workspace/camel/src/main/java/com/example/BodyBean.java
+/Users/axel/codeready-workspace/camel/src/main/java/com/example/MySpringBootRouter.java
+/Users/axel/codeready-workspace/camel/src/main/java/com/example/BeanDatos.java

@@ -1,4 +1,7 @@
+com/example/OAuthSign.class
 com/example/MySpringBootRouter.class
-com/example/MySpringBean.class
 com/example/MySpringBootApplication.class
+com/example/MySpringBean.class
 com/example/BeanDatos.class
+com/example/BodyBeans.class
+com/example/BodyBean.class
