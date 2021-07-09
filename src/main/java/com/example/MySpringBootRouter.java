@@ -53,6 +53,8 @@ public class MySpringBootRouter extends RouteBuilder {
     		.to("https://wms")
         	.to("log:DEBUG?showBody=true&showHeaders=true")
         	.setHeader("CamelHttpMethod", constant("POST"))
+        	.removeHeader(Exchange.HTTP_QUERY)
+        	.setHeader(Exchange.HTTP_URI, constant(erpUri))
         	.process(new Processor() {
                 @Override
                 public void process(Exchange exchange) throws Exception {
@@ -62,7 +64,7 @@ public class MySpringBootRouter extends RouteBuilder {
         	})
         	.setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
         	.to("log:DEBUG?showBody=true&showHeaders=true")
-        	.to(erpUri)
+        	.to("https://netsuite")
         	.to("log:DEBUG?showBody=true&showHeaders=true")
         	.to("stream:out");
     }
