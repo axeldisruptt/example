@@ -1,5 +1,7 @@
+com/example/WmsParams.class
 com/example/OAuthSign.class
 com/example/MySpringBootRouter.class
+com/example/MySpringBootRouter$1.class
 com/example/MySpringBootApplication.class
 com/example/MySpringBean.class
 com/example/BeanDatos.class

@@ -1,6 +1,9 @@
 package com.example;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.http.base.HttpOperationFailedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.net.URLEncoder;
@@ -15,20 +18,39 @@ import org.apache.camel.Processor;
  */
 @Component
 public class MySpringBootRouter extends RouteBuilder {
+	
+	@Autowired
+	private Environment env;
 
     @Override
     public void configure() throws Exception {
     	
-    	String wmsUri = "http://10.1.99.27:8080/integrator/receipt-simple-confirm?between=";
-    	String dateRange = WmsParams.getDateRange(60 * 60 * 24 * 90); // Poll interval in seconds (3 months)
-    	String encodedDateRange = URLEncoder.encode(dateRange, "UTF-8");
-    	wmsUri += encodedDateRange;
-    	String erpUri = "https://5298967-sb1.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=589&deploy=1";
+    	String erpUri = env.getProperty("erp.uri");
+    	
+    	onException(HttpOperationFailedException.class)
+    		.handled(true)
+    		.process(exchange -> {
+    			System.out.println("HANDLING EXCEPTION");
+    			System.out.println(exchange.getProperties());
+    		});
+    		// .continued(true); // Para continuar con la ruta
 
     	
-    	from("timer:hello?period={{timer.period}}").routeId("poll")
+    	from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
+    		.process(exchange -> {
+    			String wmsUri = env.getProperty("wms.uri");
+    			String dateRange = WmsParams.getDateRange(60 * 60 * 24 * 90); // Poll interval in seconds (3 months)
+    			// String dateRange = WmsParams.getDateRange(30); // Poll interval in seconds (30 seconds)
+    			System.out.println();
+    			System.out.println();
+    			System.out.println("Periodo de consulta: " + dateRange);
+    			String encodedDateRange = URLEncoder.encode(dateRange, "UTF-8");
+    	    	exchange.getMessage().setHeader(Exchange.HTTP_QUERY, "between=" + encodedDateRange);
+    	    	exchange.getMessage().setHeader(Exchange.HTTP_URI, wmsUri);
+    		})
     		.to("log:DEBUG?showBody=true&showHeaders=true")
-    		.to(wmsUri)
+    		//.to("https://test?throwExceptionOnFailure=false") // Para no lanzar errores
+    		.to("https://wms")
         	.to("log:DEBUG?showBody=true&showHeaders=true")
         	.setHeader("CamelHttpMethod", constant("POST"))
         	.process(new Processor() {
@@ -40,7 +62,7 @@ public class MySpringBootRouter extends RouteBuilder {
         	})
         	.setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
         	.to("log:DEBUG?showBody=true&showHeaders=true")
-        	.to(erpUri + "&throwExceptionOnFailure=false")
+        	.to(erpUri)
         	.to("log:DEBUG?showBody=true&showHeaders=true")
         	.to("stream:out");
     }

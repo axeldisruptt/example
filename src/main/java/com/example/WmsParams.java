@@ -10,7 +10,7 @@ public class WmsParams {
 	
 	public static String getDateRange (int secondsAgo) {
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		Date startDate;
 		Date endDate;
 		JSONObject dates = new JSONObject();
