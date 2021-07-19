@@ -3,6 +3,7 @@ package com.example;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.json.JSONObject;
 
@@ -14,9 +15,12 @@ public class WmsParams {
 		Date startDate;
 		Date endDate;
 		JSONObject dates = new JSONObject();
+		TimeZone tz = TimeZone.getTimeZone("America/Mexico_City");
 
 		Date now = new Date(System.currentTimeMillis());
       	Calendar c = Calendar.getInstance();
+      	c.setTimeZone(tz);
+      	formatter.setTimeZone(tz);
         c.setTime(now);
         c.add(Calendar.SECOND, secondsAgo * -1);
         startDate = c.getTime();
