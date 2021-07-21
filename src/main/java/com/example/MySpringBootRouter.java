@@ -30,7 +30,7 @@ public class MySpringBootRouter extends RouteBuilder {
     	onException(HttpOperationFailedException.class)
     		.handled(true)
     		.process(exchange -> {
-    			System.out.println("HANDLING EXCEPTION");
+    			System.out.println("No hay registros en el periodo de consulta");
     			System.out.println(exchange.getProperties());
     		});
     		// .continued(true); // Para continuar con la ruta
@@ -39,8 +39,9 @@ public class MySpringBootRouter extends RouteBuilder {
     	from("timer:poll?period={{timer.period}}").routeId("{{route.id}}")
     		.process(exchange -> {
     			String wmsUri = env.getProperty("wms.uri");
-    			String dateRange = WmsParams.getDateRange(60 * 60 * 24 * 90); // Poll interval in seconds (3 months)
+    			// String dateRange = WmsParams.getDateRange(60 * 60 * 24 * 90); // Poll interval in seconds (3 months)
     			// String dateRange = WmsParams.getDateRange(30); // Poll interval in seconds (30 seconds)
+    			String dateRange = WmsParams.getDateRange(60 * 60); // Poll interval in seconds (1 hour)
     			System.out.println();
     			System.out.println();
     			System.out.println("Periodo de consulta: " + dateRange);
@@ -52,8 +53,8 @@ public class MySpringBootRouter extends RouteBuilder {
     		//.to("https://test?throwExceptionOnFailure=false") // Para no lanzar errores
     		.to("https://wms")
         	.to("log:DEBUG?showBody=true&showHeaders=true")
+        	.removeHeaders("*")
         	.setHeader("CamelHttpMethod", constant("POST"))
-        	.removeHeader(Exchange.HTTP_QUERY)
         	.setHeader(Exchange.HTTP_URI, constant(erpUri))
         	.process(new Processor() {
                 @Override
